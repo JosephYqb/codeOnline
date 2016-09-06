@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>codeOnLine</title>
+  <script src="http://apps.bdimg.com/libs/jquery/1.6.4/jquery.js"></script>
+</head>
+<body>
+<label>文件名</label><input id="filename"/>
+<label>打开方式</label>
+<input name="open_type" type='radio' value="div" id="open_type1" checked="checked"><label
+  for="open_type1">div</label>
+<input name="open_type" type='radio' value="2" id="open_type2"><label for="open_type2">iframe</label>
+    <textarea id="content" name="content" style="width: 100%;height: 300px" onkeydown="ctlSubmit(event)">
+&lt;?php
+</textarea>
+<button id="button"> 提交</button>
+<div id="eval"></div>
+<script>
+  function height_auto(iframe) {
+    var doc = iframe.contentWindow.document,
+      html = doc.documentElement,
+      body = doc.body;
+// 获取高度
+    var height = Math.max(body.scrollHeight, body.offsetHeight,
+      html.clientHeight, html.scrollHeight, html.offsetHeight);
+    iframe.setAttribute('height', height);
+  }
+</script>
+<iframe id="eval_iframe" onload="height_auto(this)" width="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
+<script>
+  $("#button").click(
+    function () {
+      if ($("[name='open_type']:checked").val() == 'div') {
+        //div 打开
+        $("#eval").load("eval.php", {
+          content: $("#content").val(),
+          filename: $("#filename").val(),
+          open_type: "div"
+        });
+        $("#eval_iframe").hide();
+      } else {
+        //iframe
+        $.ajax({
+          url:"eval.php",
+          type: "POST",
+          data: {content: $("#content").val(), filename: $("#filename").val(), open_type: "iframe"},
+        success: function (date) {
+          $("#eval_iframe").attr("src", date).show();
+          $("#eval").html("");
+        }
+      })
+      }
+
+    }
+  );
+
+  //ctrl +回车
+  function ctlSubmit(event) {
+    if (event.ctrlKey && event.keyCode == 13) {
+      $("#button").click()
+    }
+  }
+
+</script>
+
+</body>
+</html>
