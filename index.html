@@ -11,6 +11,7 @@
 <input name="open_type" type='radio' value="div" id="open_type1" checked="checked"><label
   for="open_type1">div</label>
 <input name="open_type" type='radio' value="2" id="open_type2"><label for="open_type2">iframe</label>
+<button onclick="tool('clearRuntimeDir')">清空缓存</button>
     <textarea id="content" name="content" style="width: 100%;height: 300px" onkeydown="ctlSubmit(event)">
 &lt;?php
 </textarea>
@@ -61,7 +62,9 @@
       $("#button").click()
     }
   }
-
+function tool(action) {
+  $.get("tool.php?action="+action);
+}
 </script>
 
 </body>
