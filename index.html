@@ -28,6 +28,7 @@
     iframe.setAttribute('height', height);
   }
 </script>
+<div id="iframe_url" style="float:right"></div>
 <iframe id="eval_iframe" onload="height_auto(this)" width="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
 <script>
   $("#button").click(
@@ -49,6 +50,9 @@
         success: function (date) {
           $("#eval_iframe").attr("src", date).show();
           $("#eval").html("");
+		  $("#iframe_url").html(
+		  "<a target='_blank' href='"+date+"'>"+date+"</a>"
+		  );
         }
       })
       }
