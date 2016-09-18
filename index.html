@@ -16,6 +16,7 @@
 &lt;?php
 </textarea>
 <button id="button"> 提交</button>
+<div style="float:right"><label id="last_update_time"></label></div>
 <div id="eval"></div>
 <script>
   function height_auto(iframe) {
@@ -39,6 +40,8 @@
           content: $("#content").val(),
           filename: $("#filename").val(),
           open_type: "div"
+        },function () {
+          updateLateUpdateTime();
         });
         $("#eval_iframe").hide();
 		$("#iframe_url").html("");
@@ -54,6 +57,7 @@
 		  $("#iframe_url").html(
 		  "<a target='_blank' href='"+date+"'>"+date+"</a>"
 		  );
+          updateLateUpdateTime();
         }
       })
       }
@@ -70,6 +74,14 @@
 function tool(action) {
   $.get("tool.php?action="+action);
 }
+function updateLateUpdateTime(){
+  var myDate = new Date();
+  var time =  '最后更新时间:'+myDate.toLocaleString( )+',毫秒:'+myDate.getMilliseconds();
+$("#last_update_time").html(time);
+
+
+}
+
 </script>
 
 </body>
