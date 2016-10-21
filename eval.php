@@ -1,6 +1,8 @@
 <?php
-
 $content = @$_REQUEST['content'];
+if(@get_magic_quotes_gpc()>0){
+    $content = stripslashes($content);//取消自动转义 
+}
 if ($content) {
     $filename = @$_REQUEST['filename'] ? '~save/' . $_REQUEST['filename'] . ".php" : '~runtime/' . md5($content). ".php";
     f($filename, $content);
