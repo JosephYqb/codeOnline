@@ -1,100 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>codeOnLine</title>
-  <script src="http://apps.bdimg.com/libs/jquery/1.6.4/jquery.js"></script>
+    <meta charset="UTF-8">
+    <title>codeOnLine</title>
+    <script src="http://apps.bdimg.com/libs/jquery/1.6.4/jquery.js"></script>
 </head>
 <body>
 <label>文件名</label><input id="filename"/>
 <label>打开方式</label>
 <input name="open_type" type='radio' value="div" id="open_type1" checked="checked"><label
-  for="open_type1">div</label>
+        for="open_type1">div</label>
 <input name="open_type" type='radio' value="2" id="open_type2"><label for="open_type2">iframe</label>
 <button onclick="tool('clearRuntimeDir')">清空缓存</button>
     <textarea id="content" name="content" style="width: 100%;height: 300px" onkeydown="ctlSubmit(event)">
 &lt;?php
 </textarea>
-<button id="button"> 提交</button>&nbsp;
-<button id="run"> 新窗口打开</button>&nbsp;
+<button id="button"> 提交</button>
+&nbsp;
+<button id="run"> 新窗口打开</button>
+&nbsp;
 
 <div style="float:right"><label id="last_update_time"></label></div>
 <div id="eval"></div>
 <script>
-  function height_auto(iframe) {
-    var doc = iframe.contentWindow.document,
-      html = doc.documentElement,
-      body = doc.body;
+    function height_auto(iframe) {
+        var doc = iframe.contentWindow.document,
+                html = doc.documentElement,
+                body = doc.body;
 // 获取高度
-    var height = Math.max(body.scrollHeight, body.offsetHeight,
-      html.clientHeight, html.scrollHeight, html.offsetHeight);
-    iframe.setAttribute('height', height);
-  }
+        var height = Math.max(body.scrollHeight, body.offsetHeight,
+                html.clientHeight, html.scrollHeight, html.offsetHeight);
+        iframe.setAttribute('height', height);
+    }
 </script>
 <div id="iframe_url" style="float:right"></div>
-<iframe id="eval_iframe" onload="height_auto(this)" width="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
+<iframe id="eval_iframe" onload="height_auto(this)" width="100%" frameborder="0" scrolling="no" marginheight="0"
+        marginwidth="0"></iframe>
 <script>
-  $("#button").click(
-    function () {
-      if ($("[name='open_type']:checked").val() == 'div') {
-        //div 打开
-        $("#eval").load("eval.php", {
-          content: $("#content").val(),
-          filename: $("#filename").val(),
-          open_type: "div"
-        },function () {
-          updateLateUpdateTime();
-        });
-        $("#eval_iframe").hide();
-		$("#iframe_url").html("");
-      } else {
-        //iframe
-        $.ajax({
-          url:"eval.php",
-          type: "POST",
-          data: {content: $("#content").val(), filename: $("#filename").val(), open_type: "iframe"},
-        success: function (date) {
-          $("#eval_iframe").attr("src", date).show();
-          $("#eval").html("");
-		  $("#iframe_url").html(
-		  "<a target='_blank' href='"+date+"'>"+date+"</a>"
-		  );
-          updateLateUpdateTime();
+    $("#button").click(
+            function () {
+                if ($("[name='open_type']:checked").val() == 'div') {
+                    //div 打开
+                    $("#eval").load("eval.php", {
+                        content: $("#content").val(),
+                        filename: $("#filename").val(),
+                        open_type: "div"
+                    }, function () {
+                        updateLateUpdateTime();
+                    });
+                    $("#eval_iframe").hide();
+                    $("#iframe_url").html("");
+                } else {
+                    //iframe
+                    $.ajax({
+                        url: "eval.php",
+                        type: "POST",
+                        data: {content: $("#content").val(), filename: $("#filename").val(), open_type: "iframe"},
+                        success: function (date) {
+                            $("#eval_iframe").attr("src", date).show();
+                            $("#eval").html("");
+                            $("#iframe_url").html(
+                                    "<a target='_blank' href='" + date + "'>" + date + "</a>"
+                            );
+                            updateLateUpdateTime();
+                        }
+                    })
+                }
+
+            }
+    );
+
+    //新窗口打开 （适合 html等）
+    $("#run").click(
+            function () {
+                var newWin = window.open("", "_blank", "");
+                newWin.opener = null; // 防止代码对页面修改
+                newWin.document.open();
+                newWin.document.write($("#content").val());
+                newWin.document.close();
+            }
+    );
+
+
+    //ctrl +回车
+    function ctlSubmit(event) {
+        if (event.ctrlKey && event.keyCode == 13) {
+            $("#button").click()
         }
-      })
-      }
+    }
+    function tool(action) {
+        $.get("tool.php?action=" + action);
+    }
+    function updateLateUpdateTime() {
+        var myDate = new Date();
+        var time = '最后更新时间:' + myDate.toLocaleString() + ',毫秒:' + myDate.getMilliseconds();
+        $("#last_update_time").html(time);
+
 
     }
-  );
-
-  //新窗口打开 （适合 html等）
-  $("#run").click(
-  function(){
-          var newWin = window.open("", "_blank", "");
-        newWin.opener = null; // 防止代码对页面修改
-        newWin.document.open();
-        newWin.document.write($("#content").val());
-        newWin.document.close();
-		}
-  );
-  
-  
-  //ctrl +回车
-  function ctlSubmit(event) {
-    if (event.ctrlKey && event.keyCode == 13) {
-      $("#button").click()
-    }
-  }
-function tool(action) {
-  $.get("tool.php?action="+action);
-}
-function updateLateUpdateTime(){
-  var myDate = new Date();
-  var time =  '最后更新时间:'+myDate.toLocaleString( )+',毫秒:'+myDate.getMilliseconds();
-$("#last_update_time").html(time);
-
-
-}
 
 </script>
 
