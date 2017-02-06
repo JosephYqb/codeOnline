@@ -11,7 +11,13 @@
 <input name="open_type" type='radio' value="div" id="open_type1" checked="checked"><label
         for="open_type1">div</label>
 <input name="open_type" type='radio' value="2" id="open_type2"><label for="open_type2">iframe</label>
-<button onclick="tool('clearRuntimeDir')">清空缓存</button>
+<select id="toolSelect">
+<option value="">请选择操作</option>
+<option value="clearRuntimeDir">清空缓存</option>
+<option value="getSaveFile">获取保存文件</option>
+</select>
+<button id="toolExecute" >确认操作</button>
+
     <textarea id="content" name="content" style="width: 100%;height: 300px" onkeydown="ctlSubmit(event)">
 &lt;?php
 </textarea>
@@ -89,7 +95,28 @@
         }
     }
     function tool(action) {
-        $.get("tool.php?action=" + action);
+	switch (action){
+	case 'getSaveFile':
+	var filename =$("#filename").val();
+	if(filename == ''){
+	alert('请输入文件名');
+	return false;
+	}
+	 $.post("tool.php",{action:action,filename,filename}, function(json){
+	console.log(json);
+		if(json.status){
+		$("#content").html(json.data);
+		}else{
+		alert(json.msg);
+		}
+	 } ,'json');
+	
+	break;
+	
+	default:
+	        $.get("tool.php?action=" + action);
+     }
+
     }
     function updateLateUpdateTime() {
         var myDate = new Date();
@@ -97,6 +124,17 @@
         $("#last_update_time").html(time);
 
     }
+	//执行 toolExecute
+	$("#toolExecute").click(function(){
+	var action =  $("#toolSelect").val();
+	if(!action){
+	  alert('请选择操作');
+	 
+	}else{
+		tool(action);
+	}
+	return false;
+	})
 
 </script>
 
