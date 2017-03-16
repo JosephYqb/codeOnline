@@ -26,8 +26,7 @@
 <br/>
 
     <textarea id="content" name="content" style="" onkeydown="ctlSubmit(event)">
-<?php
-</textarea>
+&lt;?php</textarea>
 <button id="button"> 提交</button>
 &nbsp;
 <button id="run"> 新窗口打开</button>
@@ -89,18 +88,11 @@
                 var newWin = window.open("", "_blank", "");
                 newWin.opener = null; // 防止代码对页面修改
                 newWin.document.open();
-                newWin.document.write($("#content").val());
+                newWin.document.write(CodeMirrorEditor.getValue());
                 newWin.document.close();
             }
     );
 
-
-    //ctrl +回车
-    function ctlSubmit(event) {
-        if (event.ctrlKey && event.keyCode == 13) {
-            $("#button").click()
-        }
-    }
     function tool(action) {
 	switch (action){
 	case 'getSaveFile':
@@ -110,7 +102,6 @@
 	return false;
 	}
 	 $.post("tool.php",{action:action,filename,filename}, function(json){
-	console.log(json);
 		if(json.status){
 		$("#content").html(json.data);
 		}else{
@@ -152,8 +143,13 @@
     matchBrackets: true,
     mode: "application/x-httpd-php",
     indentUnit: 4,
-    indentWithTabs: true
+    indentWithTabs: true,
+      extraKeys:{"Ctrl-Enter":function () {
+          $("#button").click()
+      }}
+
   });
+
 </script>
 </body>
 </html>
