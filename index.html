@@ -104,7 +104,8 @@
 	}
 	 $.post("tool.php",{action:action,filename,filename}, function(json){
 		if(json.status){
-		$("#content").html(json.data);
+		//$("#content").html(json.data);
+		CodeMirrorEditor.setValue(json.data);
 		}else{
 		alert(json.msg);
 		}
