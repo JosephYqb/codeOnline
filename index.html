@@ -102,7 +102,7 @@
 	alert('请输入文件名');
 	return false;
 	}
-	 $.post("tool.php",{action:action,filename,filename}, function(json){
+	 $.post("tool.php",{action:action,filename:filename}, function(json){
 		if(json.status){
 		//$("#content").html(json.data);
 		CodeMirrorEditor.setValue(json.data);
